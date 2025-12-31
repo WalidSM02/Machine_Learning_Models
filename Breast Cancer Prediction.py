@@ -102,7 +102,7 @@ result_labels = ["Positive" if p == 1 else "Negative" for p in predictions_]
 # We use X_test_'s original indices from the split to get the IDs from the original df
 test_indices = Y_test_.index if hasattr(Y_test_, 'index') else range(len(predictions_))
 
-# Note: In your current code, Y_test_ is a numpy array. 
+
 # To get IDs easily, it's better to split the DataFrame or a Series:
 _, _, _, y_test_series = train_test_split(X, df['diagnosis'], test_size=0.25)
 # Using the index of y_test_series to get IDs from df
@@ -137,4 +137,5 @@ if file_path:
     results_df.to_excel(file_path, index=False)
     print(f"File successfully saved at: {file_path}")
 else:
+
     print("Save cancelled.")
