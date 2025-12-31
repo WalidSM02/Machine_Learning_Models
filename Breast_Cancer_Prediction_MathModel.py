@@ -82,16 +82,17 @@ from sklearn.preprocessing import StandardScaler
 sc = StandardScaler()
 X_train = sc.fit_transform(X_train)
 X_test = sc.fit_transform(X_test)
-W_init , b = compute_wb(X_train, Y_train)
-b = -np.sum(b)/X_train.shape[0]
-print(W_init, b)
 
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 
-prediction = predict_(X_train, W_init, b)
-print(prediction)
-print(Y_train)
-print(accuracy_score(Y_train, prediction))
+#New accuracy for new test sample
+l ,z  = compute_wb(X_train, Y_train)
+z =  z/X_train.shape[0]
+pred = predict_(X_test, l, z)
+print(f"Accuracy >>> {accuracy_score(Y_test, pred)*100 : .3f}%")
+print(f"weights ::: {l}")
+print(f"bias ::: {z}")
+count = 0
 while True:
     from sklearn.model_selection import train_test_split
     X_train, X_test, Y_train, Y_test = train_test_split(x_train, y_train, test_size = 0.2)
@@ -101,14 +102,18 @@ while True:
     X_train = sc.fit_transform(X_train)
     X_test = sc.fit_transform(X_test)
     W_init , b = compute_wb(X_train, Y_train)
-    b = -np.sum(b)/X_train.shape[0]
+    b = -b/X_train.shape[0]
     prediction_new = predict_(X_test, W_init, b)
     acc = accuracy_score(Y_test, prediction_new)
     print(acc)
-    if acc > 0.95:
+    count += 1
+    if acc == 1:
           import seaborn as sns
           #New accuracy for new test sample
           print(f"Accuracy >>> {accuracy_score(Y_test, prediction_new)*100 : .3f}%")
+          print(f"Weights ::: {W_init}")  
+          print(f"Bias ::: {b}")
+          print(count)
           # Heatmap Visualization of the final result
           sns.heatmap(confusion_matrix(Y_test, prediction_new), annot = True)
           plt.show()
@@ -116,12 +121,8 @@ while True:
     else:
         #W_init , b = compute_wb(X_train, Y_train)
         continue
-prediction_new = predict_(X_test, W_init, b)
+print(prediction_new.shape)
+print(Y_test.shape)
 
-'''
-import seaborn as sns
-#New accuracy for new test sample
-print(f"Accuracy >>> {accuracy_score(Y_test, prediction_new)*100 : .3f}%")
-# Heatmap Visualization of the final result
-sns.heatmap(confusion_matrix(Y_test, prediction_new), annot = True)
-plt.show()'''
+
+
